@@ -255,7 +255,7 @@ function App() {
         </Heading>
 
         <Heading size="4" m="4" weight="regular">
-          How well do you know <Link href="https://www.law.cornell.edu/rules/fre/rule_609"> Civil Rules of Evidence Rule 609 </Link>?
+          How well do you know <Link href="https://www.law.cornell.edu/rules/fre/rule_609"> Federal Rules of Evidence Rule 609 </Link>?
         </Heading>
 
         <Button variant="surface" m="4" size="3" onClick={randomize}>
