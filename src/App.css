@@ -5,6 +5,13 @@
   text-align: center;
 }
 
+#github-link {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  color: gray;
+}
+
 .card {
   margin: 24px 0;
 }
