@@ -14,12 +14,13 @@ import {
 const NBSP = '\u00A0';
 
 // Timeframes
-const  RELEASED_2_YEARS_AGO = 'Released two years ago';
-const  RELEASED_15_YEARS_AGO = 'Released fifteen years ago';
-const  CONVICTED_20_YEARS_AGO_SERVED_15_YEARS = 'Convicted 20 years ago; served 15 years';
-const  CONVICTED_5_YEARS_AGO_SERVED_1_YEAR = 'Convicted 5 years ago; servied 1 year';
-const  CONVICTED_4_YEARS_AGO = 'Convicted 4 years ago';
-const  CONVICTED_10_YEARS_AGO_SERVED_4_YEARS = 'Convicted 10 years ago; served 4 years';
+const RELEASED_2_YEARS_AGO = 'Released two years ago';
+const RELEASED_15_YEARS_AGO = 'Released fifteen years ago';
+const CONVICTED_20_YEARS_AGO_SERVED_15_YEARS = 'Convicted 20 years ago; served 15 years';
+const CONVICTED_20_YEARS_AGO_SERVED_2_YEARS = 'Convicted 20 years ago; served 2 years';
+const CONVICTED_5_YEARS_AGO_SERVED_1_YEAR = 'Convicted 5 years ago; served 1 year';
+const CONVICTED_4_YEARS_AGO = 'Convicted 4 years ago';
+const CONVICTED_10_YEARS_AGO_SERVED_4_YEARS = 'Convicted 10 years ago; served 4 years';
 
 // Identities
 const  DEFENDANT_IN_CRIMINAL_CASE = 'Defendant in criminal case';
@@ -32,9 +33,6 @@ const  PLAINTIFF_IN_CIVIL_CASE = 'Plaintiff in civil case';
 // Seriousness of Convictions
 const  FELONY = 'Felony';
 const  MISDEMEANOR = 'Misdemeanor';
-const  CARRIES_SENTENCE_OF_UP_TO_2_YEARS_GOT_PROBATION = 'Carries sentence of up to two years; got probation';
-const  SERVED_ONE_YEAR = 'Served one year';
-const  CARRIES_SENTENCE_OF_UP_TO_6_MONTHS_SERVED_TWO_MONTHS = 'Carries sentence of up to six months; served two months';
 
 // Types of Convictions
 const  ROBBERY = 'Robbery';
@@ -44,10 +42,19 @@ const  MURDER = 'Murder';
 const  PERJURY = 'Perjury';
 const  FRAUD = 'Fraud';
 
+// Pardoning
+const NOT_PARDONED = 'Not pardoned';
+const PARDONED_FOR_INNOCENCE = 'Pardoned for innocence';
+
+// Juvenile Status
+const JUVENILE = 'Juvenile at time of prior convicted crime';
+const NOT_JUVENULE = 'Not juvenile at time of prior convicted crime';
+
 const TIMEFRAMES = [
   RELEASED_2_YEARS_AGO,
   RELEASED_15_YEARS_AGO,
   CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
+  CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
   CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
   CONVICTED_4_YEARS_AGO,
   CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
@@ -65,9 +72,6 @@ const IDENTITIES = [
 const SERIOUSNESSES_OF_CONVICTIONS = [
   FELONY,
   MISDEMEANOR,
-  CARRIES_SENTENCE_OF_UP_TO_2_YEARS_GOT_PROBATION,
-  SERVED_ONE_YEAR,
-  CARRIES_SENTENCE_OF_UP_TO_6_MONTHS_SERVED_TWO_MONTHS,
 ]
 const TYPES_OF_CONVICTIONS = [
   ROBBERY,
@@ -78,46 +82,90 @@ const TYPES_OF_CONVICTIONS = [
   FRAUD,
 ];
 
+const PARDONING = [
+  NOT_PARDONED,
+  PARDONED_FOR_INNOCENCE,
+];
+
+const JUVENILE_STATUS = [
+  JUVENILE,
+  NOT_JUVENULE,
+];
+
 const getRandomElement = (arr: string[]) => (
   arr[Math.floor(Math.random()*arr.length)]
 )
 
 const getOutcome = (
-  { identity, seriousness, typeOfConviction, timeframe }
-  : {identity: string, seriousness: string, typeOfConviction: string, timeframe: string }
+  {
+    identity,
+    juvenileStatus,
+    pardoning,
+    seriousness,
+    timeframe,
+    typeOfConviction,
+  }
+  : {
+    identity: string,
+    juvenileStatus: string,
+    pardoning: string,
+    seriousness: string,
+    timeframe: string,
+    typeOfConviction: string,
+  }
 ) => {
-  if (
+  if (pardoning === PARDONED_FOR_INNOCENCE) {
+    return { text: "Automatically exclude. No balancing test applies.", color: "red" };
+  } else if (juvenileStatus === JUVENILE && identity === DEFENDANT_IN_CRIMINAL_CASE) {
+    return { text: "Automatically exclude. No balancing test applies.", color: "red" };
+  } else if (juvenileStatus === JUVENILE) {
+    return { text: "Admit in a crimincal case IF admission would be admissable against and adult AND the evidence is necessary to fairly determine the guilt or innocence", color: "orange" };
+  } else if (
+    seriousness === MISDEMEANOR
+    &&
     [
-      CARRIES_SENTENCE_OF_UP_TO_6_MONTHS_SERVED_TWO_MONTHS,
-      MISDEMEANOR,
-      SERVED_ONE_YEAR,
-    ].includes(seriousness)
+      RELEASED_15_YEARS_AGO,
+      CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
+    ].includes(timeframe)
+    && [
+      EMBEZZLEMENT,
+      PERJURY,
+      FRAUD,
+    ].includes(typeOfConviction)
   ) {
     return { text: "Automatically exclude. No balancing test applies.", color: "red" };
   } else if (
     [
-      CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
-      CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
-      CONVICTED_4_YEARS_AGO,
-      CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
+      CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
       RELEASED_15_YEARS_AGO,
-      RELEASED_2_YEARS_AGO,
     ].includes(timeframe)) {
     return { text: "Exclude unless probative value substantially outweighs prejudicial effect.", color: "orange" };
   } else if (
-    [
-      EMBEZZLEMENT,
-      FRAUD,
-      PERJURY,
+    ([
+      CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
+      CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
+      CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
+    ].includes(timeframe)
+      || seriousness === FELONY)
+    && [
+      ROBBERY,
+      THEFT,
+      MURDER,
     ].includes(typeOfConviction)
     && identity === DEFENDANT_IN_CRIMINAL_CASE
   ) {
     return { text: "Admit if probative value substantially outweighs prejudicial effect.", color: "yellow" };
   } else if (
-    [
-      EMBEZZLEMENT,
-      FRAUD,
-      PERJURY,
+    ([
+      CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
+      CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
+      CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
+    ].includes(timeframe)
+      || seriousness === FELONY)
+    && [
+      ROBBERY,
+      THEFT,
+      MURDER,
     ].includes(typeOfConviction)
     && identity !== DEFENDANT_IN_CRIMINAL_CASE
   ) {
@@ -154,16 +202,27 @@ function App() {
   const [identity, setIdentity] = React.useState(NBSP);
   const [seriousness, setSeriousness] = React.useState(NBSP);
   const [typeOfConviction, setTypeOfConviction] = React.useState(NBSP);
+  const [pardoning, setPardoning] = React.useState(NBSP);
+  const [juvenileStatus, setJuvenileStatus] = React.useState(NBSP);
   const [outcomeVisible, setOutcomeVisible] = React.useState(false);
   const [outcomeButtonVisible, setOutcomeButtonVisible ] = React.useState(false);
 
-  const outcome = getOutcome({ timeframe, identity, seriousness, typeOfConviction });
+  const outcome = getOutcome({
+    identity,
+    juvenileStatus,
+    pardoning,
+    seriousness,
+    timeframe,
+    typeOfConviction,
+  });
 
   const randomize = () => {
     setTimeframe(getRandomElement(TIMEFRAMES));
     setIdentity(getRandomElement(IDENTITIES));
     setSeriousness(getRandomElement(SERIOUSNESSES_OF_CONVICTIONS));
     setTypeOfConviction(getRandomElement(TYPES_OF_CONVICTIONS));
+    setPardoning(getRandomElement(PARDONING));
+    setJuvenileStatus(getRandomElement(JUVENILE_STATUS));
     setOutcomeVisible(false);
     setOutcomeButtonVisible(true);
   };
@@ -192,7 +251,7 @@ function App() {
         </Heading>
 
         <Button variant="surface" m="4" size="3" onClick={randomize}>
-          <Box p="8">
+          <Box m="8">
             <Text size="4" weight="bold">
               Randomize
             </Text>
@@ -200,19 +259,21 @@ function App() {
         </Button>
 
         <OptionCard color="red" title="Identity of Witness" value={identity}/>
-        <OptionCard color="green" title="Seriousness of Crime" value={seriousness}/>
-        <OptionCard color="orange" title="Type of Conviction" value={typeOfConviction}/>
-        <OptionCard color="blue" title="Time Since Conviction or Release" value={timeframe}/>
+        <OptionCard color="orange" title="Seriousness of Crime" value={seriousness}/>
+        <OptionCard color="yellow" title="Type of Conviction" value={typeOfConviction}/>
+        <OptionCard color="green" title="Time Since Conviction or Release" value={timeframe}/>
+        <OptionCard color="blue" title="Pardoning" value={pardoning}/>
+        <OptionCard color="purple" title="Juvenile Status" value={juvenileStatus}/>
 
         {
           outcomeButtonVisible &&
-          <Button variant="surface" m="4" size="3" onClick={() => setOutcomeVisible(true)}>
-            <Box p="8">
-              <Text size="4" weight="bold">
-                Display Outcome
-              </Text>
-            </Box>
-          </Button>
+            <Button variant="surface" m="4" size="3" onClick={() => setOutcomeVisible(true)}>
+              <Box m="8">
+                <Text size="4" weight="bold">
+                  Display Outcome
+                </Text>
+              </Box>
+            </Button>
         }
 
         {outcomeVisible &&

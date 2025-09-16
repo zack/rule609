@@ -12,6 +12,10 @@
   color: gray;
 }
 
+button {
+  --cursor-button: pointer;
+}
+
 .card {
   margin: 24px 0;
   --card-border-width: 2px;
@@ -31,4 +35,12 @@
 
 .card-green {
   background: green;
+}
+
+.card-purple {
+  background: purple;
+}
+
+.card-yellow {
+  background: yellow;
 }
