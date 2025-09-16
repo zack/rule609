@@ -93,8 +93,8 @@ const PARDONING = [
 // Make this less likely
 const JUVENILE_STATUS = [
   JUVENILE,
-  JUVENILE,
-  JUVENILE,
+  NOT_JUVENULE,
+  NOT_JUVENULE,
   NOT_JUVENULE,
 ];
 
