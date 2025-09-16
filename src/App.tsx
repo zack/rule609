@@ -82,12 +82,18 @@ const TYPES_OF_CONVICTIONS = [
   FRAUD,
 ];
 
+// Make this less likely
 const PARDONING = [
+  NOT_PARDONED,
+  NOT_PARDONED,
   NOT_PARDONED,
   PARDONED_FOR_INNOCENCE,
 ];
 
+// Make this less likely
 const JUVENILE_STATUS = [
+  JUVENILE,
+  JUVENILE,
   JUVENILE,
   NOT_JUVENULE,
 ];
