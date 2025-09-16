@@ -1,14 +1,15 @@
 import React from 'react'
+import './App.css'
+
 import {
   Box,
   Button,
-  Callout,
   Card,
   Container,
-  Strong,
+  Heading,
+  Link,
   Text,
 } from "@radix-ui/themes";
-import './App.css'
 
 const NBSP = '\u00A0';
 
@@ -87,49 +88,50 @@ const getOutcome = (
 ) => {
   if (
     [
+      CARRIES_SENTENCE_OF_UP_TO_6_MONTHS_SERVED_TWO_MONTHS,
       MISDEMEANOR,
       SERVED_ONE_YEAR,
-      CARRIES_SENTENCE_OF_UP_TO_6_MONTHS_SERVED_TWO_MONTHS
     ].includes(seriousness)
   ) {
-    return "Automatically exclude. No balancing test applies.";
+    return { text: "Automatically exclude. No balancing test applies.", color: "red" };
   } else if (
     [
-      RELEASED_2_YEARS_AGO,
+      CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
       CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
-      CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
       CONVICTED_4_YEARS_AGO,
-      CONVICTED_10_YEARS_AGO_SERVED_4_YEARS
+      CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
+      RELEASED_15_YEARS_AGO,
+      RELEASED_2_YEARS_AGO,
     ].includes(timeframe)) {
-    return "Exclude unless probative value substantially outweighs prejudicial effect.";
+    return { text: "Exclude unless probative value substantially outweighs prejudicial effect.", color: "orange" };
   } else if (
     [
       EMBEZZLEMENT,
-      PERJURY,
       FRAUD,
+      PERJURY,
     ].includes(typeOfConviction)
     && identity === DEFENDANT_IN_CRIMINAL_CASE
   ) {
-    return "Admit if probative value substantially outweighs prejudicial effect.";
+    return { text: "Admit if probative value substantially outweighs prejudicial effect.", color: "yellow" };
   } else if (
     [
       EMBEZZLEMENT,
-      PERJURY,
       FRAUD,
+      PERJURY,
     ].includes(typeOfConviction)
     && identity !== DEFENDANT_IN_CRIMINAL_CASE
   ) {
-    return "Admit unless Rule 403 (unfair prejudice substantially outweighs probative value) dictates exclusion";
+    return { text: "Admit unless Rule 403 (unfair prejudice substantially outweighs probative value) dictates exclusion", color: "yellow" };
   } else if (
     [
       EMBEZZLEMENT,
-      PERJURY,
       FRAUD,
+      PERJURY,
     ].includes(typeOfConviction)
   ) {
-    return "Automatically admit. No balancing test - not even Rule 403 - applies."
+    return { text: "Automatically admit. No balancing test - not even Rule 403 - applies.", color: "green" }
   } else {
-    return "Missing outcome..."
+    return { text: "Missing outcome...", color: "gray" }
   }
 }
 
@@ -155,6 +157,8 @@ function App() {
   const [outcomeVisible, setOutcomeVisible] = React.useState(false);
   const [outcomeButtonVisible, setOutcomeButtonVisible ] = React.useState(false);
 
+  const outcome = getOutcome({ timeframe, identity, seriousness, typeOfConviction });
+
   const randomize = () => {
     setTimeframe(getRandomElement(TIMEFRAMES));
     setIdentity(getRandomElement(IDENTITIES));
@@ -166,23 +170,29 @@ function App() {
 
   return (
     <Container size="2">
-      <h1> Rule 609 Game </h1>
+      <Heading size="8" weight="bold">
+        Rule 609 Game
+      </Heading>
 
-      <Button onClick={randomize}> Randomize </Button>
+      <Heading size="4" m="4" weight="regular">
+        How well do you know <Link href="https://www.law.cornell.edu/rules/fre/rule_609"> Civil Rules of Evidence Rule 609 </Link>?
+      </Heading>
+
+      <Button m="4" onClick={randomize}> Randomize </Button>
 
       <OptionCard color="red" title="Identity of Witness" value={identity}/>
       <OptionCard color="green" title="Seriousness of Crime" value={seriousness}/>
       <OptionCard color="orange" title="Type of Conviction" value={typeOfConviction}/>
       <OptionCard color="blue" title="Time Since Conviction or Release" value={timeframe}/>
 
-      { outcomeButtonVisible && <Button onClick={() => setOutcomeVisible(true)}> Click to reveal outcome </Button> }
+      { outcomeButtonVisible && <Button m="4" onClick={() => setOutcomeVisible(true)}> Click to reveal outcome </Button> }
 
       {outcomeVisible &&
-      <Callout.Root highContrast className="card" color="blue" variant="surface">
-        <Callout.Text m="3" >
-          <Strong> {getOutcome({ timeframe, identity, seriousness, typeOfConviction })} </Strong>
-        </Callout.Text>
-      </Callout.Root>
+        <Card size="2" className={`card card-${outcome.color}`} >
+          <Box>
+            <Text align="center"> {outcome.text} </Text>
+          </Box>
+        </Card>
       }
     </Container>
   )
