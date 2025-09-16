@@ -7,7 +7,8 @@ import {
   Card,
   Container,
   Heading,
-  Link, Text,
+  Link,
+  Text,
 } from "@radix-ui/themes";
 
 const NBSP = '\u00A0';
@@ -140,7 +141,7 @@ const OptionCard = ({color, title, value}: { color: string, title: string, value
       <Text as="div" size="3" align="center" weight="bold">
         {title}
       </Text>
-      <Text as="div" size="2" align="center">
+      <Text as="div" size="2" m="1" align="center">
         {value}
       </Text>
     </Box>
@@ -190,17 +191,32 @@ function App() {
           How well do you know <Link href="https://www.law.cornell.edu/rules/fre/rule_609"> Civil Rules of Evidence Rule 609 </Link>?
         </Heading>
 
-        <Button m="4" onClick={randomize}> Randomize </Button>
+        <Button variant="surface" m="4" size="3" onClick={randomize}>
+          <Box p="8">
+            <Text size="4" weight="bold">
+              Randomize
+            </Text>
+          </Box>
+        </Button>
 
         <OptionCard color="red" title="Identity of Witness" value={identity}/>
         <OptionCard color="green" title="Seriousness of Crime" value={seriousness}/>
         <OptionCard color="orange" title="Type of Conviction" value={typeOfConviction}/>
         <OptionCard color="blue" title="Time Since Conviction or Release" value={timeframe}/>
 
-        { outcomeButtonVisible && <Button m="4" onClick={() => setOutcomeVisible(true)}> Click to reveal outcome </Button> }
+        {
+          outcomeButtonVisible &&
+          <Button variant="surface" m="4" size="3" onClick={() => setOutcomeVisible(true)}>
+            <Box p="8">
+              <Text size="4" weight="bold">
+                Display Outcome
+              </Text>
+            </Box>
+          </Button>
+        }
 
         {outcomeVisible &&
-          <Card size="2" className={`card card-${outcome.color}`} >
+          <Card size="4" className={`card card-${outcome.color}`} >
             <Box>
               <Text align="center"> {outcome.text} </Text>
             </Box>
