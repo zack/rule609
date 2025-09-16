@@ -81,7 +81,10 @@ const getRandomElement = (arr: string[]) => (
   arr[Math.floor(Math.random()*arr.length)]
 )
 
-const getOutcome = ({ identity, seriousness, typeOfConviction, timeframe }) => {
+const getOutcome = (
+  { identity, seriousness, typeOfConviction, timeframe }
+  : {identity: string, seriousness: string, typeOfConviction: string, timeframe: string }
+) => {
   if (
     [
       MISDEMEANOR,
