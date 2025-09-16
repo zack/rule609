@@ -124,13 +124,15 @@ const getOutcome = (
     seriousness === MISDEMEANOR
     &&
     [
+      RELEASED_2_YEARS_AGO,
       RELEASED_15_YEARS_AGO,
-      CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
+      CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
+      CONVICTED_4_YEARS_AGO,
     ].includes(timeframe)
     && [
-      EMBEZZLEMENT,
-      PERJURY,
-      FRAUD,
+      ROBBERY,
+      THEFT,
+      MURDER,
     ].includes(typeOfConviction)
   ) {
     return { text: "Automatically exclude. No balancing test applies.", color: "red" };
