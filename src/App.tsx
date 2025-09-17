@@ -237,6 +237,7 @@ function App() {
   const [outcomeVisible, setOutcomeVisible] = React.useState(false);
   const [outcomeButtonVisible, setOutcomeButtonVisible ] = React.useState(false);
   const [enableSelects, setEnableSelects] = React.useState(false);
+  const [outcomeLock, setOutcomeLock] = React.useState(false);
 
   const outcome = getOutcome({
     identity,
@@ -346,16 +347,23 @@ function App() {
 
         {
           outcomeButtonVisible &&
-            <Button variant="surface" m="4" size="3" onClick={() => setOutcomeVisible(true)}>
-              <Box m="8">
-                <Text size="4" weight="bold">
-                  Display Outcome
-                </Text>
-              </Box>
-            </Button>
+            <Flex justify="between" align="center" >
+              <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} >
+                <Box m="6" >
+                  <Text size="4" weight="bold">
+                    { outcomeVisible ? "Hide" : "Display" } Outcome
+                  </Text>
+
+                </Box>
+              </Button>
+              <div>
+                <Text m="3" weight="bold" > Keep Outcome Visible </Text>
+                <Switch size="2" variant="classic" checked={outcomeLock} onCheckedChange={(v) => setOutcomeLock((v))}/>
+              </div>
+            </Flex>
         }
 
-        {outcomeVisible &&
+        {(outcomeVisible || outcomeLock) &&
           <Card size="4" className={`card card-${outcome.color}`} >
             <Box>
               <Text align="center"> {outcome.text} </Text>
