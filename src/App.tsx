@@ -201,8 +201,8 @@ function onlyUnique(value: string, index: number, array: string[]) {
 }
 
 const OptionCard = (
-  {color, title, value, select, setValue, options }:
-  { color: Color, title: string, value: string, select: boolean, setValue: (value: string) => void, options: string[] }
+  {color, title, value, select, setValue, options, hideOutcome }:
+  { color: Color, title: string, value: string, select: boolean, setValue: (v: string) => void, options: string[], hideOutcome: () => void }
 ) => (
   <Card size="2" className={`card card-${color}`} >
     <Box>
@@ -211,7 +211,7 @@ const OptionCard = (
       </Text>
       <Flex justify="center" >
         { select
-          ? <Select.Root value={value === NBSP ? "" : value } onValueChange={(v) => setValue(v)} >
+          ? <Select.Root value={value === NBSP ? "" : value } onValueChange={(v) => { setValue(v); hideOutcome(); }} >
             <Select.Trigger placeholder="Select..." className="select-margin" />
             <Select.Content color={color} >
               {options.filter(onlyUnique).sort().map(option => (
@@ -298,6 +298,7 @@ function App() {
 
         <OptionCard
           color="red"
+          hideOutcome={() => setOutcomeVisible(false) }
           options={IDENTITIES}
           select={enableSelects}
           setValue={setIdentity}
@@ -306,6 +307,7 @@ function App() {
         />
         <OptionCard
           color="orange"
+          hideOutcome={() => setOutcomeVisible(false) }
           options={SERIOUSNESSES_OF_CONVICTIONS}
           select={enableSelects}
           setValue={setSeriousness}
@@ -314,6 +316,7 @@ function App() {
         />
         <OptionCard
           color="yellow"
+          hideOutcome={() => setOutcomeVisible(false) }
           options={TYPES_OF_CONVICTIONS}
           select={enableSelects}
           setValue={setTypeOfConviction}
@@ -322,6 +325,7 @@ function App() {
         />
         <OptionCard
           color="green"
+          hideOutcome={() => setOutcomeVisible(false) }
           options={TIMEFRAMES}
           select={enableSelects}
           setValue={setTimeframe}
@@ -330,6 +334,7 @@ function App() {
         />
         <OptionCard
           color="blue"
+          hideOutcome={() => setOutcomeVisible(false) }
           options={PARDONING}
           select={enableSelects}
           setValue={setPardoning}
@@ -338,6 +343,7 @@ function App() {
         />
         <OptionCard
           color="purple"
+          hideOutcome={() => setOutcomeVisible(false) }
           options={JUVENILE_STATUS}
           select={enableSelects}
           setValue={setJuvenileStatus}
@@ -348,9 +354,9 @@ function App() {
         {
           outcomeButtonVisible &&
             <Flex justify="between" align="center" >
-              <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} >
+              <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className="display-button">
                 <Box m="6" >
-                  <Text size="4" weight="bold">
+                  <Text weight="bold">
                     { outcomeVisible ? "Hide" : "Display" } Outcome
                   </Text>
 

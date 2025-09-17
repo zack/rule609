@@ -48,3 +48,7 @@ button {
 .select-margin {
   margin-top: 12px;
 }
+
+.display-button {
+  width: 250px;
+}
