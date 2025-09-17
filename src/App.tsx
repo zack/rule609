@@ -6,12 +6,17 @@ import {
   Button,
   Card,
   Container,
+  Flex,
   Heading,
   Link,
+  Select,
+  Switch,
   Text,
 } from "@radix-ui/themes";
 
 const NBSP = '\u00A0';
+
+type Color = "red" | "orange" | "yellow" | "green" | "blue" | "purple";
 
 // Timeframes
 const RELEASED_2_YEARS_AGO = 'Released two years ago';
@@ -191,15 +196,32 @@ const getOutcome = (
   }
 }
 
-const OptionCard = ({color, title, value}: { color: string, title: string, value: string }) => (
+function onlyUnique(value: string, index: number, array: string[]) {
+  return array.indexOf(value) === index;
+}
+
+const OptionCard = (
+  {color, title, value, select, setValue, options }:
+  { color: Color, title: string, value: string, select: boolean, setValue: (value: string) => void, options: string[] }
+) => (
   <Card size="2" className={`card card-${color}`} >
     <Box>
       <Text as="div" size="3" align="center" weight="bold">
         {title}
       </Text>
-      <Text as="div" size="2" m="1" align="center">
-        {value}
-      </Text>
+      <Flex justify="center" >
+        { select
+          ? <Select.Root value={value === NBSP ? "" : value } onValueChange={(v) => setValue(v)} >
+            <Select.Trigger placeholder="Select..." className="select-margin" />
+            <Select.Content color={color} >
+              {options.filter(onlyUnique).sort().map(option => (
+                <Select.Item value={option}> {option} </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Root>
+          : <Text as="div" size="2" m="3" align="center"> {value} </Text>
+        }
+      </Flex>
     </Box>
   </Card>
 )
@@ -214,6 +236,7 @@ function App() {
   const [juvenileStatus, setJuvenileStatus] = React.useState(NBSP);
   const [outcomeVisible, setOutcomeVisible] = React.useState(false);
   const [outcomeButtonVisible, setOutcomeButtonVisible ] = React.useState(false);
+  const [enableSelects, setEnableSelects] = React.useState(false);
 
   const outcome = getOutcome({
     identity,
@@ -258,20 +281,68 @@ function App() {
           How well do you know <Link href="https://www.law.cornell.edu/rules/fre/rule_609"> Federal Rules of Evidence Rule 609 </Link>?
         </Heading>
 
-        <Button variant="surface" m="4" size="3" onClick={randomize}>
-          <Box m="8">
-            <Text size="4" weight="bold">
-              Randomize
-            </Text>
-          </Box>
-        </Button>
+        <Flex justify="between" align="center" >
+          <Button variant="surface" size="3" onClick={randomize}>
+            <Box m="6" >
+              <Text size="4" weight="bold">
+                Randomize
+              </Text>
+            </Box>
+          </Button>
+          <div>
+            <Text m="3" weight="bold" > Enable Selects </Text>
+            <Switch size="2" variant="classic" checked={enableSelects} onCheckedChange={(v) => setEnableSelects((v))}/>
+          </div>
+        </Flex>
 
-        <OptionCard color="red" title="Identity of Witness" value={identity}/>
-        <OptionCard color="orange" title="Seriousness of Crime" value={seriousness}/>
-        <OptionCard color="yellow" title="Type of Conviction" value={typeOfConviction}/>
-        <OptionCard color="green" title="Time Since Conviction or Release" value={timeframe}/>
-        <OptionCard color="blue" title="Pardoning" value={pardoning}/>
-        <OptionCard color="purple" title="Juvenile Status" value={juvenileStatus}/>
+        <OptionCard
+          color="red"
+          options={IDENTITIES}
+          select={enableSelects}
+          setValue={setIdentity}
+          title="Identity of Witness"
+          value={identity}
+        />
+        <OptionCard
+          color="orange"
+          options={SERIOUSNESSES_OF_CONVICTIONS}
+          select={enableSelects}
+          setValue={setSeriousness}
+          title="Seriousness of Crime"
+          value={seriousness}
+        />
+        <OptionCard
+          color="yellow"
+          options={TYPES_OF_CONVICTIONS}
+          select={enableSelects}
+          setValue={setTypeOfConviction}
+          title="Type of Conviction"
+          value={typeOfConviction}
+        />
+        <OptionCard
+          color="green"
+          options={TIMEFRAMES}
+          select={enableSelects}
+          setValue={setTimeframe}
+          title="Time Since Conviction or Release"
+          value={timeframe}
+        />
+        <OptionCard
+          color="blue"
+          options={PARDONING}
+          select={enableSelects}
+          setValue={setPardoning}
+          title="Pardoning"
+          value={pardoning}
+        />
+        <OptionCard
+          color="purple"
+          options={JUVENILE_STATUS}
+          select={enableSelects}
+          setValue={setJuvenileStatus}
+          title="Juvenile Status"
+          value={juvenileStatus}
+        />
 
         {
           outcomeButtonVisible &&
