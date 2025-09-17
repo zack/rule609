@@ -170,7 +170,11 @@ const getOutcome = (
     typeOfConviction: TypeOfConviction,
   }
 ) => {
-  if (isPardonedForInnocence(pardoning)) {
+  if (!crimeIsFelony(seriousness) && typeOfConviction === MURDER) {
+    return { text: "Invalid selection. Murder cannot be misdemeanor.", color: "gray" };
+  } else if (!crimeIsFelony(seriousness) && timeframeIsFelony(timeframe)) {
+    return { text: "Invalid selection. Misdemeanor cannot have sentence greater than 1 year.", color: "gray" };
+  } else if (isPardonedForInnocence(pardoning)) {
     return { text: "Automatically exclude. No balancing test applies.", color: "red" };
   } else if (isJuvenileCrime(juvenileStatus)) {
     return { text: "Admit in a criminal case IF admission would be admissable against and adult AND the evidence is necessary to fairly determine the guilt or innocence", color: "orange" };
