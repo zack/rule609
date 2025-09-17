@@ -14,38 +14,39 @@ import {
   Text,
 } from "@radix-ui/themes";
 
-const NBSP = '\u00A0';
+// CONSTANTS
 
 type Color = "red" | "orange" | "yellow" | "green" | "blue" | "purple";
 
 // Timeframes
-const RELEASED_2_YEARS_AGO = 'Released two years ago';
-const RELEASED_15_YEARS_AGO = 'Released fifteen years ago';
+const CONVICTED_10_YEARS_AGO_SERVED_4_YEARS = 'Convicted 10 years ago; served 4 years';
 const CONVICTED_20_YEARS_AGO_SERVED_15_YEARS = 'Convicted 20 years ago; served 15 years';
 const CONVICTED_20_YEARS_AGO_SERVED_2_YEARS = 'Convicted 20 years ago; served 2 years';
-const CONVICTED_5_YEARS_AGO_SERVED_1_YEAR = 'Convicted 5 years ago; served 1 year';
 const CONVICTED_4_YEARS_AGO = 'Convicted 4 years ago';
-const CONVICTED_10_YEARS_AGO_SERVED_4_YEARS = 'Convicted 10 years ago; served 4 years';
+const CONVICTED_5_YEARS_AGO_SERVED_1_YEAR = 'Convicted 5 years ago; served 1 year';
+const NO_TIME_SERVED = 'No time served';
+const RELEASED_15_YEARS_AGO = 'Released fifteen years ago';
+const RELEASED_2_YEARS_AGO = 'Released two years ago';
 
 // Identities
-const  DEFENDANT_IN_CRIMINAL_CASE = 'Defendant in criminal case';
 const  DEFENDANT_IN_CIVIL_CASE = 'Defendant in civil case';
-const  WITNESS_IN_CIVIL_CASE = 'Witness in civil case';
+const  DEFENDANT_IN_CRIMINAL_CASE = 'Defendant in criminal case';
 const  NON_DEFENDANT_WITNESS_IN_CRIMINAL_CASE = 'Non-defendant witness in criminal case';
-const  VICTIM_IN_CRIMINAL_CASE = 'Victim in criminal case';
 const  PLAINTIFF_IN_CIVIL_CASE = 'Plaintiff in civil case';
+const  VICTIM_IN_CRIMINAL_CASE = 'Victim in criminal case';
+const  WITNESS_IN_CIVIL_CASE = 'Witness in civil case';
 
 // Seriousness of Convictions
 const  FELONY = 'Felony';
 const  MISDEMEANOR = 'Misdemeanor';
 
 // Types of Convictions
-const  ROBBERY = 'Robbery';
 const  EMBEZZLEMENT = 'Embezzlement';
-const  THEFT = 'Theft';
+const  FRAUD = 'Fraud';
 const  MURDER = 'Murder';
 const  PERJURY = 'Perjury';
-const  FRAUD = 'Fraud';
+const  ROBBERY = 'Robbery';
+const  THEFT = 'Theft';
 
 // Pardoning
 const NOT_PARDONED = 'Not pardoned';
@@ -55,53 +56,97 @@ const PARDONED_FOR_INNOCENCE = 'Pardoned for innocence';
 const JUVENILE = 'Juvenile at time of prior convicted crime';
 const NOT_JUVENULE = 'Not juvenile at time of prior convicted crime';
 
+// ARRAYS AND TYPES
+
 const TIMEFRAMES = [
-  RELEASED_2_YEARS_AGO,
-  RELEASED_15_YEARS_AGO,
+  CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
   CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
   CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
-  CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
   CONVICTED_4_YEARS_AGO,
-  CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
+  CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
+  NO_TIME_SERVED,
+  RELEASED_15_YEARS_AGO,
+  RELEASED_2_YEARS_AGO,
 ];
+type Timeframe = typeof TIMEFRAMES[number];
 
 const IDENTITIES = [
-  DEFENDANT_IN_CRIMINAL_CASE,
   DEFENDANT_IN_CIVIL_CASE,
-  WITNESS_IN_CIVIL_CASE,
+  DEFENDANT_IN_CRIMINAL_CASE,
   NON_DEFENDANT_WITNESS_IN_CRIMINAL_CASE,
-  VICTIM_IN_CRIMINAL_CASE,
   PLAINTIFF_IN_CIVIL_CASE,
+  VICTIM_IN_CRIMINAL_CASE,
+  WITNESS_IN_CIVIL_CASE,
 ];
+type Identity = typeof IDENTITIES[number];
 
 const SERIOUSNESSES_OF_CONVICTIONS = [
   FELONY,
   MISDEMEANOR,
-]
+];
+type Seriousness = typeof SERIOUSNESSES_OF_CONVICTIONS[number];
+
 const TYPES_OF_CONVICTIONS = [
-  ROBBERY,
   EMBEZZLEMENT,
-  THEFT,
+  FRAUD,
   MURDER,
   PERJURY,
-  FRAUD,
+  ROBBERY,
+  THEFT,
 ];
+type TypeOfConviction = typeof TYPES_OF_CONVICTIONS[number];
 
-// Make this less likely
-const PARDONING = [
-  NOT_PARDONED,
-  NOT_PARDONED,
-  NOT_PARDONED,
-  PARDONED_FOR_INNOCENCE,
-];
+const PARDONING = [...Array(9).fill(NOT_PARDONED), (PARDONED_FOR_INNOCENCE)];
+type Pardoning = typeof PARDONING[number];
 
-// Make this less likely
-const JUVENILE_STATUS = [
-  JUVENILE,
-  NOT_JUVENULE,
-  NOT_JUVENULE,
-  NOT_JUVENULE,
-];
+const JUVENILE_STATUS = [...Array(9).fill(NOT_JUVENULE), (JUVENILE)];
+type JuvenileStatus = typeof JUVENILE_STATUS[number];
+
+
+// CHECK FUNCTIONS
+
+const crimeIsRecent = (timeframe: Timeframe) => (
+  [
+    CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
+    CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
+    CONVICTED_4_YEARS_AGO,
+    CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
+    NO_TIME_SERVED,
+    RELEASED_2_YEARS_AGO
+  ].includes(timeframe)
+);
+
+const crimeIsDishonest = (typeOfConviction: TypeOfConviction) => (
+  [
+    EMBEZZLEMENT,
+    FRAUD,
+    PERJURY,
+  ].includes(typeOfConviction)
+);
+
+const crimeIsFelony = (seriousness: Seriousness) => (
+  seriousness === FELONY
+)
+
+const witnessIsCriminalDefendant = (identity: Identity) => (
+  identity === DEFENDANT_IN_CRIMINAL_CASE
+);
+
+const timeframeIsFelony = (timeframe: Timeframe) => (
+  [
+    CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
+    CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
+    CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
+  ].includes(timeframe)
+);
+
+const isJuvenileCrime = (juvenileStatus: JuvenileStatus) => (
+  juvenileStatus === JUVENILE
+);
+
+const isPardonedForInnocence = (pardoning: Pardoning) => (
+  pardoning === PARDONED_FOR_INNOCENCE
+);
 
 const getRandomElement = (arr: string[]) => (
   arr[Math.floor(Math.random()*arr.length)]
@@ -117,82 +162,28 @@ const getOutcome = (
     typeOfConviction,
   }
   : {
-    identity: string,
-    juvenileStatus: string,
-    pardoning: string,
-    seriousness: string,
-    timeframe: string,
-    typeOfConviction: string,
+    identity: Identity,
+    juvenileStatus: JuvenileStatus,
+    pardoning: Pardoning,
+    seriousness: Seriousness,
+    timeframe: Timeframe,
+    typeOfConviction: TypeOfConviction,
   }
 ) => {
-  if (pardoning === PARDONED_FOR_INNOCENCE) {
+  if (isPardonedForInnocence(pardoning)) {
     return { text: "Automatically exclude. No balancing test applies.", color: "red" };
-  } else if (juvenileStatus === JUVENILE && identity === DEFENDANT_IN_CRIMINAL_CASE) {
-    return { text: "Automatically exclude. No balancing test applies.", color: "red" };
-  } else if (juvenileStatus === JUVENILE) {
-    return { text: "Admit in a crimincal case IF admission would be admissable against and adult AND the evidence is necessary to fairly determine the guilt or innocence", color: "orange" };
-  } else if (
-    seriousness === MISDEMEANOR
-    &&
-    [
-      RELEASED_2_YEARS_AGO,
-      RELEASED_15_YEARS_AGO,
-      CONVICTED_5_YEARS_AGO_SERVED_1_YEAR,
-      CONVICTED_4_YEARS_AGO,
-    ].includes(timeframe)
-    && [
-      ROBBERY,
-      THEFT,
-      MURDER,
-    ].includes(typeOfConviction)
-  ) {
-    return { text: "Automatically exclude. No balancing test applies.", color: "red" };
-  } else if (
-    [
-      CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
-      RELEASED_15_YEARS_AGO,
-    ].includes(timeframe)) {
-    return { text: "Exclude unless probative value substantially outweighs prejudicial effect.", color: "orange" };
-  } else if (
-    ([
-      CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
-      CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
-      CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
-    ].includes(timeframe)
-      || seriousness === FELONY)
-    && [
-      ROBBERY,
-      THEFT,
-      MURDER,
-    ].includes(typeOfConviction)
-    && identity === DEFENDANT_IN_CRIMINAL_CASE
-  ) {
-    return { text: "Admit if probative value substantially outweighs prejudicial effect.", color: "yellow" };
-  } else if (
-    ([
-      CONVICTED_20_YEARS_AGO_SERVED_15_YEARS,
-      CONVICTED_20_YEARS_AGO_SERVED_2_YEARS,
-      CONVICTED_10_YEARS_AGO_SERVED_4_YEARS,
-    ].includes(timeframe)
-      || seriousness === FELONY)
-    && [
-      ROBBERY,
-      THEFT,
-      MURDER,
-    ].includes(typeOfConviction)
-    && identity !== DEFENDANT_IN_CRIMINAL_CASE
-  ) {
-    return { text: "Admit unless Rule 403 (unfair prejudice substantially outweighs probative value) dictates exclusion", color: "yellow" };
-  } else if (
-    [
-      EMBEZZLEMENT,
-      FRAUD,
-      PERJURY,
-    ].includes(typeOfConviction)
-  ) {
+  } else if (isJuvenileCrime(juvenileStatus)) {
+    return { text: "Admit in a criminal case IF admission would be admissable against and adult AND the evidence is necessary to fairly determine the guilt or innocence", color: "orange" };
+  } else if (!crimeIsRecent(timeframe)) {
+    return { text: "Admit if probative value substantially outweighs prejudicial effect.", color: "orange" };
+  } else if (crimeIsDishonest(typeOfConviction)) {
     return { text: "Automatically admit. No balancing test - not even Rule 403 - applies.", color: "green" }
+  } else if (!crimeIsFelony(seriousness) && !timeframeIsFelony(timeframe)) {
+    return { text: "Automatically exclude. No balancing test applies.", color: "red" };
+  } else if (witnessIsCriminalDefendant(identity)) {
+    return { text: "Admit if probative value outweighs prejudicial effect to defendant.", color: "orange" };
   } else {
-    return { text: "Missing outcome...", color: "gray" }
+    return { text: "Admit unless Rule 403 (unfair prejudice substantially outweighs probative value) dictates exclusion", color: "yellow" };
   }
 }
 
@@ -211,7 +202,7 @@ const OptionCard = (
       </Text>
       <Flex justify="center" >
         { select
-          ? <Select.Root value={value === NBSP ? "" : value } onValueChange={(v) => { setValue(v); hideOutcome(); }} >
+          ? <Select.Root value={value} onValueChange={(v) => { setValue(v); hideOutcome(); }} >
             <Select.Trigger placeholder="Select..." className="select-margin" />
             <Select.Content color={color} >
               {options.filter(onlyUnique).sort().map(option => (
@@ -226,18 +217,31 @@ const OptionCard = (
   </Card>
 )
 
+const elementsCreateValidHistory = (
+  { typeOfConviction, seriousness, timeframe }:
+  { typeOfConviction: TypeOfConviction, seriousness: Seriousness, timeframe: Timeframe }
+) => {
+  if (seriousness === MISDEMEANOR && typeOfConviction === MURDER) {
+    return false;
+  } else if (seriousness === MISDEMEANOR && timeframeIsFelony(timeframe)) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 
 function App() {
-  const [timeframe, setTimeframe] = React.useState(NBSP);
-  const [identity, setIdentity] = React.useState(NBSP);
-  const [seriousness, setSeriousness] = React.useState(NBSP);
-  const [typeOfConviction, setTypeOfConviction] = React.useState(NBSP);
-  const [pardoning, setPardoning] = React.useState(NBSP);
-  const [juvenileStatus, setJuvenileStatus] = React.useState(NBSP);
-  const [outcomeVisible, setOutcomeVisible] = React.useState(false);
-  const [outcomeButtonVisible, setOutcomeButtonVisible ] = React.useState(false);
-  const [enableSelects, setEnableSelects] = React.useState(false);
-  const [outcomeLock, setOutcomeLock] = React.useState(false);
+  const [identity, setIdentity] = React.useState<Identity>(() => getRandomElement(IDENTITIES));
+  const [juvenileStatus, setJuvenileStatus] = React.useState<JuvenileStatus>(() => getRandomElement(JUVENILE_STATUS));
+  const [pardoning, setPardoning] = React.useState<Pardoning>(() => getRandomElement(PARDONING));
+  const [seriousness, setSeriousness] = React.useState<Seriousness>(() => getRandomElement(SERIOUSNESSES_OF_CONVICTIONS));
+  const [timeframe, setTimeframe] = React.useState<Timeframe>(() => getRandomElement(TIMEFRAMES));
+  const [typeOfConviction, setTypeOfConviction] = React.useState<TypeOfConviction>(() => getRandomElement(TYPES_OF_CONVICTIONS));
+
+  const [outcomeVisible, setOutcomeVisible] = React.useState<boolean>(false);
+  const [enableSelects, setEnableSelects] = React.useState<boolean>(false);
+  const [outcomeLock, setOutcomeLock] = React.useState<boolean>(false);
 
   const outcome = getOutcome({
     identity,
@@ -249,14 +253,38 @@ function App() {
   });
 
   const randomize = () => {
-    setTimeframe(getRandomElement(TIMEFRAMES));
-    setIdentity(getRandomElement(IDENTITIES));
-    setSeriousness(getRandomElement(SERIOUSNESSES_OF_CONVICTIONS));
-    setTypeOfConviction(getRandomElement(TYPES_OF_CONVICTIONS));
-    setPardoning(getRandomElement(PARDONING));
-    setJuvenileStatus(getRandomElement(JUVENILE_STATUS));
     setOutcomeVisible(false);
-    setOutcomeButtonVisible(true);
+
+    let c = getRandomElement(TYPES_OF_CONVICTIONS);
+    const i = getRandomElement(IDENTITIES);
+    const j = getRandomElement(JUVENILE_STATUS);
+    const p = getRandomElement(PARDONING);
+    let s = getRandomElement(SERIOUSNESSES_OF_CONVICTIONS);
+    let t = getRandomElement(TIMEFRAMES);
+    let valid = elementsCreateValidHistory({
+      typeOfConviction: c,
+      seriousness: s,
+      timeframe: t,
+    });
+
+    while (!valid) {
+      c = getRandomElement(TYPES_OF_CONVICTIONS);
+      s = getRandomElement(SERIOUSNESSES_OF_CONVICTIONS);
+      t = getRandomElement(TIMEFRAMES);
+
+      valid = elementsCreateValidHistory({
+        typeOfConviction: c,
+        seriousness: s,
+        timeframe: t,
+      });
+    }
+
+    setIdentity(i);
+    setJuvenileStatus(j);
+    setPardoning(p);
+    setSeriousness(s);
+    setTimeframe(t);
+    setTypeOfConviction(c);
   };
 
   return (
@@ -286,13 +314,13 @@ function App() {
           <Button variant="surface" size="3" onClick={randomize}>
             <Box m="6" >
               <Text size="4" weight="bold">
-                Randomize
+                Randomize Elements
               </Text>
             </Box>
           </Button>
           <div>
-            <Text m="3" weight="bold" > Enable Selects </Text>
-            <Switch size="2" variant="classic" checked={enableSelects} onCheckedChange={(v) => setEnableSelects((v))}/>
+            <Text m="3" weight="bold" > <label htmlFor="enable-dropdowns"> Enable Dropdowns </label> </Text>
+            <Switch id="enable-dropdowns" size="2" variant="classic" checked={enableSelects} onCheckedChange={(v) => setEnableSelects((v))}/>
           </div>
         </Flex>
 
@@ -352,21 +380,20 @@ function App() {
         />
 
         {
-          outcomeButtonVisible &&
-            <Flex justify="between" align="center" >
-              <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className="display-button">
-                <Box m="6" >
-                  <Text weight="bold">
-                    { outcomeVisible ? "Hide" : "Display" } Outcome
-                  </Text>
+          <Flex justify="between" align="center" >
+            <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className="display-button">
+              <Box m="6" >
+                <Text weight="bold">
+                  { outcomeVisible ? "Hide" : "Display" } Outcome
+                </Text>
 
-                </Box>
-              </Button>
-              <div>
-                <Text m="3" weight="bold" > Keep Outcome Visible </Text>
-                <Switch size="2" variant="classic" checked={outcomeLock} onCheckedChange={(v) => setOutcomeLock((v))}/>
-              </div>
-            </Flex>
+              </Box>
+            </Button>
+            <div>
+              <Text m="3" weight="bold" > <label htmlFor="outcome-lock"> Keep Outcome Visible </label> </Text>
+              <Switch id="outcome-lock" size="2" variant="classic" checked={outcomeLock} onCheckedChange={(v) => setOutcomeLock((v))}/>
+            </div>
+          </Flex>
         }
 
         {(outcomeVisible || outcomeLock) &&
