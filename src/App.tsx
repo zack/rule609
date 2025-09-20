@@ -199,22 +199,22 @@ const OptionCard = (
   {color, title, value, select, setValue, options, hideOutcome }:
   { color: Color, title: string, value: string, select: boolean, setValue: (v: string) => void, options: string[], hideOutcome: () => void }
 ) => (
-  <Card size="2" className={`card card-${color}`} >
+  <Card size="2" className={`card card-${color} no-box-shadow`} >
     <Box>
-      <Text as="div" size="3" align="center" weight="bold">
+      <Text as="div" size="3" align="center" weight="bold" className="exo-bold">
         {title}
       </Text>
       <Flex justify="center" >
         { select
           ? <Select.Root value={value} onValueChange={(v) => { setValue(v); hideOutcome(); }} >
-            <Select.Trigger placeholder="Select..." className="select-margin" />
+            <Select.Trigger placeholder="Select..." className="select-margin exo" />
             <Select.Content color={color} >
               {options.filter(onlyUnique).sort().map(option => (
-                <Select.Item value={option}> {option} </Select.Item>
+                <Select.Item value={option} className="exo"> {option} </Select.Item>
               ))}
             </Select.Content>
           </Select.Root>
-          : <Text as="div" size="2" m="3" align="center"> {value} </Text>
+          : <Text as="div" size="2" m="3" align="center" className="exo"> {value} </Text>
         }
       </Flex>
     </Box>
@@ -236,16 +236,20 @@ const elementsCreateValidHistory = (
 
 
 function App() {
-  const [identity, setIdentity] = React.useState<Identity>(() => getRandomElement(IDENTITIES));
-  const [juvenileStatus, setJuvenileStatus] = React.useState<JuvenileStatus>(() => getRandomElement(JUVENILE_STATUS));
-  const [pardoning, setPardoning] = React.useState<Pardoning>(() => getRandomElement(PARDONING));
-  const [seriousness, setSeriousness] = React.useState<Seriousness>(() => getRandomElement(SERIOUSNESSES_OF_CONVICTIONS));
-  const [timeframe, setTimeframe] = React.useState<Timeframe>(() => getRandomElement(TIMEFRAMES));
-  const [typeOfConviction, setTypeOfConviction] = React.useState<TypeOfConviction>(() => getRandomElement(TYPES_OF_CONVICTIONS));
+  const [identity, setIdentity] = React.useState<Identity>("");
+  const [juvenileStatus, setJuvenileStatus] = React.useState<JuvenileStatus>("");
+  const [pardoning, setPardoning] = React.useState<Pardoning>("");
+  const [seriousness, setSeriousness] = React.useState<Seriousness>("");
+  const [timeframe, setTimeframe] = React.useState<Timeframe>("");
+  const [typeOfConviction, setTypeOfConviction] = React.useState<TypeOfConviction>("");
 
   const [outcomeVisible, setOutcomeVisible] = React.useState<boolean>(false);
   const [enableSelects, setEnableSelects] = React.useState<boolean>(false);
   const [outcomeLock, setOutcomeLock] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    randomize();
+  }, []);
 
   const outcome = getOutcome({
     identity,
@@ -306,16 +310,16 @@ function App() {
       </a>
 
       <Container size="2">
-        <Heading size="8" weight="bold">
+        <Heading size="8" weight="bold" className="exo-bold">
           Rule 609 Game
         </Heading>
 
-        <Heading size="4" m="4" weight="regular">
+        <Heading size="4" m="4" weight="regular" className="exo-bold" >
           How well do you know <Link href="https://www.law.cornell.edu/rules/fre/rule_609"> Federal Rules of Evidence Rule 609 </Link>?
         </Heading>
 
         <Flex justify="between" align="center" >
-          <Button variant="surface" size="3" onClick={randomize}>
+          <Button variant="surface" size="3" onClick={randomize} className="exo-bold">
             <Box m="6" >
               <Text size="4" weight="bold">
                 Randomize Elements
@@ -323,7 +327,7 @@ function App() {
             </Box>
           </Button>
           <div>
-            <Text m="3" weight="bold" > <label htmlFor="enable-dropdowns"> Enable Dropdowns </label> </Text>
+            <Text m="3" weight="bold" > <label htmlFor="enable-dropdowns" className="exo-bold" > Enable Dropdowns </label> </Text>
             <Switch id="enable-dropdowns" size="2" variant="classic" checked={enableSelects} onCheckedChange={(v) => setEnableSelects((v))}/>
           </div>
         </Flex>
@@ -385,25 +389,25 @@ function App() {
 
         {
           <Flex justify="between" align="center" >
-            <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className="display-button">
+            <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className="display-button exo">
               <Box m="6" >
-                <Text weight="bold">
+                <Text weight="bold" className="exo-bold">
                   { outcomeVisible ? "Hide" : "Display" } Outcome
                 </Text>
 
               </Box>
             </Button>
             <div>
-              <Text m="3" weight="bold" > <label htmlFor="outcome-lock"> Keep Outcome Visible </label> </Text>
+              <Text m="3" weight="bold" > <label htmlFor="outcome-lock" className="exo-bold" > Keep Outcome Visible </label> </Text>
               <Switch id="outcome-lock" size="2" variant="classic" checked={outcomeLock} onCheckedChange={(v) => setOutcomeLock((v))}/>
             </div>
           </Flex>
         }
 
         {(outcomeVisible || outcomeLock) &&
-          <Card size="4" className={`card card-${outcome.color}`} >
+          <Card size="4" className={`card card-${outcome.color} no-box-shadow`} >
             <Box>
-              <Text align="center"> {outcome.text} </Text>
+              <Text align="center" className="exo"> {outcome.text} </Text>
             </Box>
           </Card>
         }

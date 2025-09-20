@@ -1,3 +1,15 @@
+@font-face {
+  font-family: "Exo-Bold";
+  src: local("Exo-Bold"), url("./fonts/Exo-Bold.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Exo";
+  src: local("Exo"), url("./fonts/Exo-Regular.ttf") format("truetype");
+  font-weight: normal;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -12,6 +24,14 @@
   color: gray;
 }
 
+.exo-bold {
+  font-family: "Exo-Bold";
+}
+
+.exo {
+  font-family: "Exo";
+}
+
 button {
   --cursor-button: pointer;
 }
@@ -19,6 +39,10 @@ button {
 .card {
   margin: 24px 0;
   --card-border-width: 2px;
+
+  &.no-box-shadow::after {
+    box-shadow: none;
+  }
 }
 
 .card-red {
@@ -43,6 +67,10 @@ button {
 
 .card-yellow {
   background: yellow;
+}
+
+.card-gray {
+  background: lightgray;
 }
 
 .select-margin {
