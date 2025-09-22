@@ -17,19 +17,12 @@
   text-align: center;
 }
 
-#github-link {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  color: gray;
+.exo {
+  font-family: "Exo";
 }
 
 .exo-bold {
   font-family: "Exo-Bold";
-}
-
-.exo {
-  font-family: "Exo";
 }
 
 button {
@@ -43,6 +36,10 @@ button {
   &.no-box-shadow::after {
     box-shadow: none;
   }
+}
+
+.card-answer {
+  height: 7rem;
 }
 
 .card-red {
