@@ -416,7 +416,7 @@ function App() {
       </div>
 
       <div>
-        Code available on {" "} <a href="https://www.github.com/zack/rule609">GitHub</a>
+        Code on {" "} <a href="https://www.github.com/zack/rule609">GitHub</a>
       </div>
       </Container>
     </>
