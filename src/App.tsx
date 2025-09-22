@@ -403,7 +403,7 @@ function App() {
         </Card>
 
       <div>
-          © {(new Date).getYear() + 1900} by <a href="https://youngren.io/"> Zack Youngren</a>
+          © {(new Date).getFullYear()} by <a href="https://youngren.io/"> Zack Youngren</a>
           {" "}
           licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> CC BY-NC-SA 4.0</a>
           {" "}
