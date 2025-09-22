@@ -395,11 +395,13 @@ function App() {
         }
 
         <Card size="4" className={`card card-answer card-${outcomeColor} no-box-shadow`} >
-          <Box>
-            <Text align="center" className="exo">
-              { (outcomeVisible || outcomeLock) && outcome.text }
-            </Text>
-          </Box>
+          <Flex direction="column" justify="center" style={{ height: "100%" }} >
+            <Box>
+              <Text align="center" className="exo">
+                { (outcomeVisible || outcomeLock) && outcome.text }
+              </Text>
+            </Box>
+          </Flex>
         </Card>
 
       <div>
