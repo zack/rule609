@@ -176,10 +176,12 @@ const getOutcome = (
     return { text: "Invalid selection. Misdemeanor cannot have sentence greater than 1 year.", color: "gray" };
   } else if (isPardonedForInnocence(pardoning)) {
     return { text: "Automatically exclude. No balancing test applies.", color: "red" };
+  } else if (isJuvenileCrime(juvenileStatus) && witnessIsCriminalDefendant(identity)) {
+    return { text: "Automatically exclude. No balancing test applies.", color: "red" };
   } else if (isJuvenileCrime(juvenileStatus)) {
     return { text: "Admit in a criminal case IF admission would be admissable against and adult AND the evidence is necessary to fairly determine the guilt or innocence", color: "orange" };
   } else if (!crimeIsRecent(timeframe)) {
-    return { text: "Admit if probative value substantially outweighs prejudicial effect.", color: "orange" };
+    return { text: "Admit if probative value substantially outweighs prejudicial effect and proponent gives adverse party reasonable written notice.", color: "orange" };
   } else if (crimeIsDishonest(typeOfConviction)) {
     return { text: "Automatically admit. No balancing test - not even Rule 403 - applies.", color: "green" }
   } else if (!crimeIsFelony(seriousness) && !timeframeIsFelony(timeframe)) {
@@ -187,7 +189,7 @@ const getOutcome = (
   } else if (witnessIsCriminalDefendant(identity)) {
     return { text: "Admit if probative value outweighs prejudicial effect to defendant.", color: "orange" };
   } else {
-    return { text: "Admit unless Rule 403 (unfair prejudice substantially outweighs probative value) dictates exclusion", color: "yellow" };
+    return { text: "Admit subject to rule 403.", color: "yellow" };
   }
 }
 
