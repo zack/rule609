@@ -27,6 +27,12 @@
 
 button {
   --cursor-button: pointer;
+
+  &.hover-effect:hover {
+    background-color: #004cff10;
+    box-shadow: 3px 3px 3px rgba(1,1,1,.2);
+    outline: solid 1px blue;
+  }
 }
 
 .card {

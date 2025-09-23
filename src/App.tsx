@@ -311,7 +311,7 @@ function App() {
         </Heading>
 
         <Flex justify="between" align="center" >
-          <Button variant="surface" size="3" onClick={randomize} className="exo-bold">
+          <Button variant="surface" size="3" onClick={randomize} className="exo-bold hover-effect">
             <Box m="6" >
               <Text size="4" weight="bold">
                 Randomize Elements
@@ -381,7 +381,7 @@ function App() {
 
         {
           <Flex justify="between" align="center" >
-            <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className="display-button exo">
+            <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className="display-button exo hover-effect">
               <Box m="6" >
                 <Text weight="bold" className="exo-bold">
                   { outcomeVisible ? "Hide" : "Display" } Outcome
