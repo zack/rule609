@@ -1,5 +1,6 @@
 import React from 'react'
 import './App.css'
+import { TextEffectTwo } from 'react-text-animate'
 
 import {
   Box,
@@ -198,8 +199,8 @@ function onlyUnique(value: string, index: number, array: string[]) {
 }
 
 const OptionCard = (
-  {color, title, value, select, setValue, options, hideOutcome }:
-  { color: Color, title: string, value: string, select: boolean, setValue: (v: string) => void, options: string[], hideOutcome: () => void }
+  { animationKey, color, title, value, select, setValue, options, hideOutcome, playAnimation }:
+  { animationKey: number, color: Color, title: string, value: string, select: boolean, setValue: (v: string) => void, options: string[], hideOutcome: () => void, playAnimation: () => void }
 ) => (
   <Card size="2" className={`card card-${color} no-box-shadow`} >
     <Box>
@@ -208,15 +209,19 @@ const OptionCard = (
       </Text>
       <Flex justify="center" >
         { select
-          ? <Select.Root value={value} onValueChange={(v) => { setValue(v); hideOutcome(); }} >
-            <Select.Trigger placeholder="Select..." className="select-margin exo" />
-            <Select.Content color={color} >
-              {options.filter(onlyUnique).sort().map(option => (
-                <Select.Item value={option} className="exo"> {option} </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Root>
-          : <Text as="div" size="2" m="3" align="center" className="exo"> {value} </Text>
+          ?
+            <Select.Root value={value} onValueChange={(v) => { setValue(v); hideOutcome(); playAnimation(); }} >
+              <Select.Trigger placeholder="Select..." className="select-margin exo" />
+              <Select.Content color={color} >
+                {options.filter(onlyUnique).sort().map(option => (
+                  <Select.Item value={option} className="exo" key={option} > {option} </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+            :
+            <Text as="div" size="2" align="center" className="exo">
+              <TextEffectTwo staggerDuration={0.05} text={value} key={animationKey} />
+            </Text>
         }
       </Flex>
     </Box>
@@ -249,9 +254,15 @@ function App() {
   const [enableSelects, setEnableSelects] = React.useState<boolean>(false);
   const [outcomeLock, setOutcomeLock] = React.useState<boolean>(false);
 
+  const [animationKey, setAnimationKey] = React.useState<number>(0);
+
+  const playAnimation = () => {
+    setAnimationKey(animationKey + 1);
+  }
+
   React.useEffect(() => {
     randomize();
-  }, []);
+  }, []); // eslint-disable-line
 
   const outcome = getOutcome({
     identity,
@@ -295,6 +306,8 @@ function App() {
     setSeriousness(s);
     setTimeframe(t);
     setTypeOfConviction(c);
+
+    playAnimation();
   };
 
   const outcomeColor = outcomeVisible || outcomeLock ? outcome.color : "white";
@@ -325,54 +338,66 @@ function App() {
         </Flex>
 
         <OptionCard
+          animationKey={animationKey}
           color="red"
           hideOutcome={() => setOutcomeVisible(false) }
           options={IDENTITIES}
+          playAnimation={playAnimation}
           select={enableSelects}
           setValue={setIdentity}
           title="Identity of Witness"
           value={identity}
         />
         <OptionCard
+          animationKey={animationKey}
           color="orange"
           hideOutcome={() => setOutcomeVisible(false) }
           options={SERIOUSNESSES_OF_CONVICTIONS}
+          playAnimation={playAnimation}
           select={enableSelects}
           setValue={setSeriousness}
           title="Seriousness of Crime"
           value={seriousness}
         />
         <OptionCard
+          animationKey={animationKey}
           color="yellow"
           hideOutcome={() => setOutcomeVisible(false) }
           options={TYPES_OF_CONVICTIONS}
+          playAnimation={playAnimation}
           select={enableSelects}
           setValue={setTypeOfConviction}
           title="Type of Conviction"
           value={typeOfConviction}
         />
         <OptionCard
+          animationKey={animationKey}
           color="green"
           hideOutcome={() => setOutcomeVisible(false) }
           options={TIMEFRAMES}
+          playAnimation={playAnimation}
           select={enableSelects}
           setValue={setTimeframe}
           title="Time Since Conviction or Release"
           value={timeframe}
         />
         <OptionCard
+          animationKey={animationKey}
           color="blue"
           hideOutcome={() => setOutcomeVisible(false) }
           options={PARDONING}
+          playAnimation={playAnimation}
           select={enableSelects}
           setValue={setPardoning}
           title="Pardoning"
           value={pardoning}
         />
         <OptionCard
+          animationKey={animationKey}
           color="purple"
           hideOutcome={() => setOutcomeVisible(false) }
           options={JUVENILE_STATUS}
+          playAnimation={playAnimation}
           select={enableSelects}
           setValue={setJuvenileStatus}
           title="Juvenile Status"
@@ -381,7 +406,7 @@ function App() {
 
         {
           <Flex justify="between" align="center" >
-            <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className="display-button exo hover-effect">
+            <Button variant="surface" size="3" onClick={() => setOutcomeVisible(!outcomeVisible)} disabled={outcomeLock} className={`display-button exo ${!outcomeLock && "hover-effect"}`}>
               <Box m="6" >
                 <Text weight="bold" className="exo-bold">
                   { outcomeVisible ? "Hide" : "Display" } Outcome
@@ -399,14 +424,14 @@ function App() {
         <Card size="4" className={`card card-answer card-${outcomeColor} no-box-shadow`} >
           <Flex direction="column" justify="center" style={{ height: "100%" }} >
             <Box>
-              <Text align="center" className="exo">
-                { (outcomeVisible || outcomeLock) && outcome.text }
+              <Text align="center" className={`exo ${!outcomeVisible && !outcomeLock && "hide"}`}>
+                <TextEffectTwo staggerDuration={0.05} text={outcome.text} key={animationKey} />
               </Text>
             </Box>
           </Flex>
         </Card>
 
-      <div>
+        <div>
           © {(new Date).getFullYear()} by <a href="https://youngren.io/"> Zack Youngren</a>
           {" "}
           licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> CC BY-NC-SA 4.0</a>
@@ -415,11 +440,11 @@ function App() {
           <img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} />
           <img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt="" style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} />
           <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style={{ maxWidth: "1em", maxHeight: "1em", marginLeft: ".2em" }} />
-      </div>
+        </div>
 
-      <div>
-        Code on {" "} <a href="https://www.github.com/zack/rule609">GitHub</a>
-      </div>
+        <div>
+          Code on {" "} <a href="https://www.github.com/zack/rule609">GitHub</a>
+        </div>
       </Container>
     </>
   )
