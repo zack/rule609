@@ -180,7 +180,7 @@ const getOutcome = (
   } else if (isJuvenileCrime(juvenileStatus) && witnessIsCriminalDefendant(identity)) {
     return { text: "Automatically exclude. No balancing test applies.", color: "red" };
   } else if (isJuvenileCrime(juvenileStatus)) {
-    return { text: "Admit in a criminal case IF admission would be admissable against and adult AND the evidence is necessary to fairly determine the guilt or innocence", color: "orange" };
+    return { text: "Admit in a criminal case IF admission would be admissable against an adult AND the evidence is necessary to fairly determine the guilt or innocence", color: "orange" };
   } else if (!crimeIsRecent(timeframe)) {
     return { text: "Admit if probative value substantially outweighs prejudicial effect and proponent gives adverse party reasonable written notice.", color: "orange" };
   } else if (crimeIsDishonest(typeOfConviction)) {
