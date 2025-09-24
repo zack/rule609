@@ -324,7 +324,7 @@ function App() {
   return (
     <>
       <Container size="2">
-        <Heading as="h1" ize="8" weight="bold" className="exo-bold">
+        <Heading as="h1" size="8" weight="bold" className="exo-bold">
           Fed.R.Evid. § 609 Game
         </Heading>
 
