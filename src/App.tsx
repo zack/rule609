@@ -218,10 +218,19 @@ const OptionCard = (
                 ))}
               </Select.Content>
             </Select.Root>
-            :
-            <Text as="div" size="2" align="center" className="exo">
-              <TextEffectTwo staggerDuration={0.05} text={value} key={animationKey} />
-            </Text>
+            : (<>
+                <div className="motion-on">
+                  <Text as="div" size="2" align="center" className="exo">
+                    <TextEffectTwo staggerDuration={0.05} text={value} key={animationKey} />
+                  </Text>
+                </div>
+
+                <div className="motion-off">
+                  <Text as="div" size="2" align="center" className="exo no-motion-value">
+                    {value}
+                  </Text>
+                </div>
+              </>)
         }
       </Flex>
     </Box>
@@ -425,7 +434,13 @@ function App() {
           <Flex direction="column" justify="center" style={{ height: "100%" }} >
             <Box>
               <Text align="center" className={`exo ${!outcomeVisible && !outcomeLock && "hide"}`}>
-                <TextEffectTwo staggerDuration={0.05} text={outcome.text} key={animationKey} />
+                <div className="motion-on">
+                  <TextEffectTwo staggerDuration={0.05} text={outcome.text} key={animationKey} />
+                </div>
+
+                <div className="motion-off">
+                  {outcome.text}
+                </div>
               </Text>
             </Box>
           </Flex>

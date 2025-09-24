@@ -86,6 +86,33 @@ button {
   margin-bottom: 4px;
 }
 
+.no-motion-value {
+  margin: 18px 0 10px 0;
+}
+
 .display-button {
   width: 250px;
 }
+
+.motion-on {
+  display: block;
+}
+
+.motion-off {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-on {
+    display: none;
+  }
+
+  .motion-off {
+    display: block;
+  }
+
+  .card {
+    transition: 0ms;
+  }
+}
+
