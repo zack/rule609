@@ -324,11 +324,11 @@ function App() {
   return (
     <>
       <Container size="2">
-        <Heading size="8" weight="bold" className="exo-bold">
+        <Heading as="h1" ize="8" weight="bold" className="exo-bold">
           Fed.R.Evid. § 609 Game
         </Heading>
 
-        <Heading size="4" m="4" weight="regular" className="exo-bold" >
+        <Heading as="h2" size="4" m="4" weight="regular" className="exo-bold" >
           How well do you know <Link href="https://www.law.cornell.edu/rules/fre/rule_609"> Federal Rules of Evidence § 609 </Link>?
         </Heading>
 
