@@ -12,6 +12,8 @@ The result is calculated using the following logic:
   - Automatically exclude. No balancing test applies.,
 - **Else, if witness was juvenile at time of crime:**
   - Admit in a criminal case IF admission would be admissible against and adult AND the evidence is necessary to fairly determine the guilt or innocence,
+- **Else, if crime was misdemeanor (and sentencing was 1 year or less) and the crime was not dishonest:**
+  - Automatically exclude. No balancing test applies.
 - **Else, if conviction & release were both >10 years ago:**
   - Admit if probative value substantially outweighs prejudicial effect and proponent gives adverse party reasonable written notice.
 - **Else, if crime was dishonest:**
